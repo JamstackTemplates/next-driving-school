@@ -29,3 +29,21 @@ test('invalid/incomplete/overnight intervals name the weekday to fix', () => {
   assert.throws(() => validateHours(hours.slice(1)), /Monday/);
   assert.throws(() => validateHours(hours.map(x => x.day === 'Tuesday' ? { ...x, closes: undefined } : x)), /Tuesday/);
 });
+
+test('Bristol phone hours observe closing boundaries, Sunday and both 2026 BST changes', async () => {
+  const { phoneHours } = await import('../content/business.ts');
+  const bristol = (date: string) => openingLabel(phoneHours, 'Europe/London', new Date(date), 'Phones');
+  assert.equal(bristol('2026-03-27T18:59:00Z'), 'Phones open now until 19:00');
+  assert.equal(bristol('2026-03-27T19:00:00Z'), 'Phones closed — open Saturday at 09:00');
+  assert.equal(bristol('2026-03-28T14:59:00Z'), 'Phones open now until 15:00');
+  assert.equal(bristol('2026-03-28T15:00:00Z'), 'Phones closed — open Monday at 08:00');
+  for (const time of ['2026-03-29T00:59:00Z', '2026-03-29T01:00:00Z', '2026-10-25T00:59:00Z', '2026-10-25T01:00:00Z']) {
+    assert.equal(bristol(time), 'Phones closed — open Monday at 08:00');
+  }
+  assert.equal(bristol('2026-03-30T06:59:00Z'), 'Phones closed — open today at 08:00');
+  assert.equal(bristol('2026-03-30T07:00:00Z'), 'Phones open now until 19:00');
+  assert.equal(bristol('2026-10-23T17:59:00Z'), 'Phones open now until 19:00');
+  assert.equal(bristol('2026-10-23T18:00:00Z'), 'Phones closed — open Saturday at 09:00');
+  assert.equal(bristol('2026-10-26T07:59:00Z'), 'Phones closed — open today at 08:00');
+  assert.equal(bristol('2026-10-26T08:00:00Z'), 'Phones open now until 19:00');
+});

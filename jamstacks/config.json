@@ -1,0 +1,19 @@
+{
+  "name": "Green Light Driving School",
+  "description": "Friendly L-plate driving school with lesson packages, instructors and a test-prep guide.",
+  "tech": "next",
+  "type": "driving",
+  "style": "school",
+  "internal": false,
+  "components": [
+    "support-form"
+  ],
+  "configFile": "site.config.json",
+  "screenshots": {
+    "light": "jamstacks/home-light.jpg",
+    "dark": "jamstacks/home-dark.jpg",
+    "theme": {
+      "strategy": "media"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "templateId": "next-driving-school",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "fullPage": false,
+  "captures": [
+    {
+      "mode": "light",
+      "sha256": "2a5ed24b9ab367d8e4edcc819397b605a25fa21c4c519b03efed15e93fa791c1",
+      "file": "jamstacks/home-light.jpg",
+      "bytes": 188599
+    },
+    {
+      "mode": "dark",
+      "sha256": "d187932d677d50fe06e6bd6f72b05565d560b24fd36f301d9a6090f0636fa0f1",
+      "file": "jamstacks/home-dark.jpg",
+      "bytes": 171901
+    }
+  ]
+}

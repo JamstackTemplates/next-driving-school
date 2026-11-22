@@ -17,7 +17,10 @@ The `.claude/skills/` folder holds `write-plan` (drafts `plan/PLAN.md`) and `cle
 
 ## Structure and content
 
-`content/business.ts` holds the starter's shared business details and sample copy. When building a
+`content/business.ts` owns identity, contact details and phone hours. `content/lessons.ts` owns
+package prices and availability, `content/instructors.ts` owns profile and availability data,
+`content/areas.ts` owns pick-up areas and centre names, and `content/test-prep.ts` owns the guide's
+structured content. `lib/validate-content.ts` checks edits during tests and export. When building a
 site, write page-specific copy directly in the route's `app/**/page.tsx` as JSX children of named React
 components. Put headings, calls to action, labels and captions in page order. Backing components
 own the semantic markup, Tailwind styles, accessibility and behavior. Keep typed data in `content/`

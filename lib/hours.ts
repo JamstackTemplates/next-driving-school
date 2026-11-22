@@ -24,7 +24,7 @@ export function validateHours(hours: readonly OpeningHours[]): void {
   if (hours.length !== 7) throw new Error('hours: expected seven weekdays');
 }
 /** Browser callers supply the clock; build/static views never compute current availability. */
-export function openingLabel(hours: readonly OpeningHours[], timeZone: string, now = new Date()): string {
+export function openingLabel(hours: readonly OpeningHours[], timeZone: string, now = new Date(), subject?: string): string {
   const fallback = 'See opening hours';
   if (!timeZone) return fallback;
   validateHours(hours);
@@ -37,11 +37,14 @@ export function openingLabel(hours: readonly OpeningHours[], timeZone: string, n
   if (index < 0) return fallback;
   const current = Number(part('hour')) * 60 + Number(part('minute'));
   const today = hours.find(entry => entry.day === DAYS[index])!;
-  if (today.opens && today.closes && current >= minutes(today.opens) && current < minutes(today.closes)) return `Open now · until ${today.closes}`;
+  if (today.opens && today.closes && current >= minutes(today.opens) && current < minutes(today.closes)) return subject ? `${subject} open now until ${today.closes}` : `Open now · until ${today.closes}`;
   for (let offset = 0; offset <= 7; offset++) {
     const day = DAYS[(index + offset) % 7];
     const entry = hours.find(value => value.day === day)!;
-    if (entry.opens && (offset > 0 || current < minutes(entry.opens))) return `Closed · opens ${offset === 0 ? 'today' : day} at ${entry.opens}`;
+    if (entry.opens && (offset > 0 || current < minutes(entry.opens))) {
+      const when = `${offset === 0 ? 'today' : day} at ${entry.opens}`;
+      return subject ? `${subject} closed — open ${when}` : `Closed · opens ${when}`;
+    }
   }
-  return 'Closed · see opening hours';
+  return subject ? `${subject} closed — see opening hours` : 'Closed · see opening hours';
 }

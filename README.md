@@ -1,85 +1,86 @@
-# JamstackTemplates Next.js starter
+# Green Light Driving School
 
-The shared starter for Next.js templates in the `JamstackTemplates` organization. Its canonical home is
-`JamstackTemplates/template-next`, alongside the templates generated from it.
-It is not a gallery design or a published demo. Business content is sample content. No application code
-in a website created from this template depends on the starter checkout or the portal repository.
+A static Next.js website for a fictitious Bristol driving school, built for the Jamstacks gallery.
+Use Node 24 or later and npm.
 
-## Build your website
-
-Start in the checkout of the repository GitHub created from `JamstackTemplates/template-next`. All
-starter files are already present. Local development requires Node 24 or later and npm.
-
-To build a new site, fill in `plan/PLAN.md`, then tell the coding agent **`Implement plan/PLAN.md`**.
-In Claude Code, `/write-plan <business description>` drafts the brief for you. For a gallery template,
-pass the table row: `/write-plan next-type-style | Business | Description | Form purpose`.
-After reviewing the finished site, run `/cleanup-plan` or delete `plan/` and `.claude/skills/` by hand
-to remove all initial build instructions.
-
-To preview locally, run `npm ci` and `npm run dev` from the repository root.
+```sh
+npm ci
+npm run dev
+```
 
 ## Pages
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Minimal content-driven home page and Organization JSON-LD |
-| `/contact/` | Hosted support form when configured; visible email alternative |
-| `/404.html` | Friendly static error page |
+| `/` | Featured lesson prices, instructor availability, the route to test day and Bristol pick-up areas |
+| `/lessons/` | All lesson packages, hourly rates and lesson policies |
+| `/instructors/` | Instructor profiles and filters for pick-up area and transmission |
+| `/test-prep/` | Eight lesson stages, private readiness checks, practice questions and a test-day checklist |
+| `/contact/` | Enquiries, email and phone, Bristol phone hours and pick-up areas |
+| `/404.html` | Wrong Turn page with directions back |
 
-## Make it yours
+## Edit the website
 
 | File | Owns |
 | --- | --- |
-| `content/business.ts` | Shared business name, contact details and starter sample copy |
-| `app/page.tsx`, `app/<route>/page.tsx` | Page composition and editable copy such as headings and calls to action |
-| `content/menu.ts` or `content/services.ts` (add when needed) | Industry-specific typed collections |
-| `site.config.json` | Public name, description, hostname, optional timeZone and Jamstacks integration |
-| `app/tailwind.input.css` | Theme tokens, utility mappings and small shared styles |
-| `components/site-header.tsx`, `site-footer.tsx` | Replaceable navigation and visual shell |
-| `lib/structured-data.ts` | Schema type/properties derived from real content |
-| `app/sitemap.ts` | Public routes; update when adding a page |
+| `app/page.tsx`, `app/<route>/page.tsx`, `app/not-found.tsx` | Page copy, section order and calls to action |
+| `content/business.ts` | Shared business name, email, phone, city, description and weekly phone hours |
+| `content/lessons.ts` | Hourly rates, lesson packages, hours, prices, availability, Home selection, inclusions and sign colours |
+| `content/instructors.ts` | Profile names, optional pronouns, car and transmission, area and package references, languages, specialties, teaching years, availability, quotes and badge numbers |
+| `content/areas.ts` | Pick-up neighbourhoods by side of Bristol and test centre names |
+| `content/test-prep.ts` | Eight numbered stages, typical hours, practice questions and hints, fault fixes and the test-day checklist |
+| `lib/validate-content.ts`, `lib/structured-data.ts` | Build-time validation and content-derived JSON-LD |
+| `app/tailwind.input.css`, `components/road-art.tsx` | Themes, shared visual styles and inline road artwork |
+| `site.config.json` | Public site name, description, domain, time zone and Jamstacks configuration |
 
-Edit page copy in the route file, for example `<Hero.Heading>Seasonal flowers</Hero.Heading>`
-in `app/page.tsx` for the Home page. The backing
-component owns the styling and interactions. Use typed fields for data the site needs to look up or
-reuse. For example, change `business.email` to update Contact. Rename in `business.name` and
-`site.config.json.name`. Add a typed core-content file for frequent owner edits: a food menu should use
-the existing sections/items/price/availability model; changes such as sold out, seasonal or a new section
-should be data edits with actionable content tests. Do not add business content to configuration: the
-Jamstacks provisioner replaces that file wholesale, possibly adding `provisioningId`.
+Edit copy where it appears in the route file. For example, change `<Hero.Heading>…</Hero.Heading>`
+in `app/page.tsx` to change the home headline. When renaming the school, update `business.name`,
+`site.config.json.name`, the wordmark in the header and footer, and `public/og.png`. Keep business
+data in `content/` because the provisioner can replace the public configuration file.
 
-## Appearance and optional local-business features
+To try the two most common edits, find `starter-ten` in `content/lessons.ts` and change
+`priceManual` from `400` to `410`. Find `tom-reilly` in `content/instructors.ts` and change
+`availability` from `'waitlist'` to `'taking-pupils'`. Refresh the preview. The new manual price
+appears on Home, Lessons and the manual instructors’ package lists. Tom’s update appears on Home,
+his profile and the Instructors call to action. Home JSON-LD reflects both edits.
 
-The starter uses system fonts, neutral Tailwind v4 tokens and the published `jamstacks` package's
-ThemeProvider, ThemeScript and DarkModeToggle. No font download or font licence file is needed for
-system fonts. Each designed template chooses and documents self-hosted font packages and their licences.
-Utilities live in components; colours originate in CSS tokens with light, automatic-dark and explicit-dark
-values plus `@theme inline` mappings. Keep the hosted form's primary fill dark enough for white text.
-Keyboard focus, reduced motion and print styles are included. The footer credit is yours to keep,
-reword or remove.
+Prices are positive whole pounds, at most the package hours multiplied by the matching hourly rate.
+Use `null` for a transmission you do not offer and remove that package reference from instructors
+who teach that transmission. Set package availability to `open`, `limited` or `paused`, and
+keep exactly four packages marked `featured`. Instructor availability accepts `taking-pupils`,
+`waitlist` or `full`. Keep IDs unique and URL-safe, instructor plate numbers unique and two digits
+long, and junctions numbered 1 through 8. Changing a stage ID resets that stage’s saved readiness.
 
-For a business with visiting hours, add address/directions/hours to typed content, set the IANA `timeZone`
-in site.config.json and use optional `GoogleMap`, `TimeZoneNote` and `OpenBadge` components. GoogleMap
-accepts an address and descriptive title; map helpers need no key. `OpenBadge` accepts seven
-`OpeningHours` records, uses the business zone and refreshes each minute in the browser; static/no-JS
-output is neutral. Same-day intervals only: overnight hours fail validation and need a tested extension
-before use. The baseline home page does not load a map or assert opening hours.
+## Appearance and browser behavior
+
+Lilita One, Inclusive Sans and Gochi Hand are self-hosted using their Fontsource packages under the
+SIL Open Font License. The theme starts from the visitor’s light or dark preference. The theme button
+can override it. The traffic light stays green immediately under reduced motion. Print styles keep
+lesson prices for both transmissions and the test-prep checklists visible.
+
+Use `site.config.json.timeZone` and `phoneHours` in `content/business.ts` to set phone availability.
+The site uses inclusive opening times and exclusive closing times in the configured zone. Omit both
+times for a closed day. Phone status is computed locally and updates every minute. Lessons run
+07:00–21:00 by arrangement. Only the phone hours affect the status display.
+
+Both prices and the full instructor list are available without JavaScript. Readiness choices stay in
+browser storage. With JavaScript disabled the stage radio groups still work for the current visit
+and the summary lamps stay unlit.
 
 ## Public configuration
 
 ```json
 {
-  "name": "Business name",
-  "description": "Public description",
-  "domain": "next-business-minimal.jamstacks.net",
-  "timeZone": "America/New_York",
+  "name": "Green Light Driving School",
+  "description": "Friendly L-plate driving lessons across Bristol.",
+  "domain": "next-driving-school.jamstacks.net",
+  "timeZone": "Europe/London",
   "jamstacks": { "siteId": "", "cdnUrl": "https://cdn.jamstacks.net" }
 }
 ```
 
-The starter itself leaves domain/timeZone unset. Gallery templates use their folder name plus
-`.jamstacks.net`; customers replace the demo domain with their own. Do not invent canonical URLs when
-the deployed address is unknown.
+Replace the demo domain with your own when creating a customer site. The public time zone controls
+phone status. Canonical URLs and social images use the Pages URL when it is supplied.
 
 | Environment variable | Public build-time meaning |
 | --- | --- |
@@ -116,7 +117,7 @@ PAGES_BASE_PATH=/preview PAGES_BASE_URL=https://owner.github.io/preview npm run 
 npm start -- --base /preview --port 3000
 ```
 
-Tests cover config/provisioner compatibility, embed state, content rules, optional opening hours,
+Tests cover config/provisioner compatibility, embed state, content rules, Bristol phone hours and readiness,
 and structured-data escaping. Typecheck uses Next's generated route types.
 When changing the Contact integration, base paths or canonical URLs, check the exported HTML and
 sitemap. Verify both configured and unconfigured Contact with the corresponding build settings.
@@ -141,8 +142,7 @@ DNS is managed separately; for template demos the CNAME targets `jamstacktemplat
 
 A host-level CSP must permit same-origin Next.js scripts/assets, the inline theme bootstrap (using an
 appropriate hash/nonce policy), the configured Jamstacks CDN scripts/assets and the published form's
-API connection origin. Derive actual directives from the deployed component. Optional maps require
-`frame-src https://www.google.com`. Apply CSP at the host; static export cannot set response headers
+API connection origin. Derive actual directives from the deployed component. Apply CSP at the host; static export cannot set response headers
 through a running Next.js server. Do not put private credentials into CSP or relax policies blindly.
 
 ## Publishing assets and structure
@@ -155,12 +155,13 @@ genuine screenshots before running its separate publishing test:
 
 ```sh
 node /home/mythz/src/mythz/jamstacks.net/tools/template-screenshots/capture.mjs \
-  --template /path/to/next-type-style --modes light,dark --executable /usr/bin/chromium
+  --template . --modes light,dark --width 1440 --height 900 --executable /usr/bin/chromium
 node --test jamstacks/config.test.mjs
 ```
 
-Before publication: replace neutral content and shell; validate industry data/schema and all links;
-choose licensed fonts; verify both themes/base-path/embed states; create a neutral 1200×630 public/og.png
-from the finished design and wire metadata; replace the icon; generate gallery captures and validate;
-confirm domain/Pages settings and HTTPS; remove `plan/` and `.claude/skills/` after review. The website must not import or
-link the planning folder. No stock screenshot or OG image is supplied as if it were final.
+Keep `plan/` and `.claude/skills/` through design review. Remove them before publishing the gallery
+template. The customer site works without those folders.
+
+The test-prep guide refers to [DVSA vehicle safety questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions),
+[driving-test requirements](https://www.gov.uk/driving-test) and
+[provisional licence guidance](https://www.gov.uk/driving-lessons-learning-to-drive).
